@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Notícia</title>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa; 
+        }
+        header {
+            background-color: #343a40; 
+            color: black;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            background-color: #e9ecef; 
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <header class="container mt-4">
+        <h1>Cadastrar Notícia</h1>
+        <p id="user-info" class="text-center text-muted"></p> 
+        <button id="back-to-index" class="btn btn-secondary mb-3">Página Inicial</button>
+        <button id="back-to-news" class="btn btn-secondary mb-3">Notícias</button>
+    </header>
+
+    <main class="container mt-4">
+       
+        
+
+        <form>
+            <div class="form-group">
+                <label for="user-name-input">Nome:</label>
+                <input type="text" class="form-control" id="user-name-input" name="user-name-input" required readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="user-email">Email:</label>
+                <input type="email" class="form-control" id="user-email" name="user-email" required readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="title">Título:</label>
+                <input type="text" class="form-control" id="title" name="title" required>
+            </div>
+
+            <div class="form-group">
+                <label for="content">Conteúdo:</label>
+                <textarea class="form-control" id="content" name="content" rows="5" required></textarea>
+            </div>
+
+            <button id="submit-news-button" class="btn btn-primary">Cadastrar Notícia</button>
+        </form>
+
+        <div id="news-list" class="mt-4"></div>
+    </main>
+
+    <script src="main2.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            
+            const params = new URLSearchParams(window.location.search);
+            const userName = params.get("name");
+            const userEmail = params.get("email");
+
+            
+            document.querySelector("#user-name-input").value = userName || "";
+            document.querySelector("#user-email").value = userEmail || "";
+
+            
+            document.querySelector("#user-info").textContent = `Usuário: ${userName || ""} | Email: ${userEmail || ""}`;
+
+            
+            document.getElementById('back-to-index').addEventListener('click', () => {
+                window.location.href = 'index.html';
+            });
+
+            document.getElementById('back-to-news').addEventListener('click', () => {
+                window.location.href = 'index3.html';
+            });
+        });
+    </script>
+</body>
+</html>

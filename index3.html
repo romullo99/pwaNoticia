@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuários e Notícias</title>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa; 
+        }
+        .user-item {
+            background-color: #e9ecef; 
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .container {
+            background-color: #e9ecef; 
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .card {
+            background-color: #343a40; 
+            color: white; 
+        }
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+        }
+        .user-email {
+            font-size: 0.9rem; 
+        }
+    </style>
+</head>
+<body>
+    <br>
+    <div class="container">
+        <h1 class="text-center text-dark">Notícias</h1>
+        <br>
+        <div class="text-center mb-4">
+            <button id="back-to-index" class="btn btn-dark mr-2">Voltar para Página Inicial</button>
+        </div>
+    </div>
+    
+    <div class="container mt-5">
+        <div id="users-list" class="mt-4"></div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            displayUsers();
+
+            
+            document.getElementById('back-to-index').addEventListener('click', () => {
+                window.location.href = 'index.html';
+            });
+        });
+
+        function displayUsers() {
+            const usersList = document.querySelector("#users-list");
+            const users = getUsersFromLocalStorage();
+            const news = getNewsFromLocalStorage();
+
+            if (users.length === 0) {
+                usersList.innerHTML = "<p class='text-center text-dark'>Nenhum usuário cadastrado.</p>";
+                return;
+            }
+
+            users.forEach((user) => {
+                const userSection = document.createElement("div");
+                userSection.classList.add("user-item", "mb-5");
+
+                let userNews = news.filter(newsItem => newsItem.userEmail === user.email);
+                let newsHtml = userNews.map(newsItem => `
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <h5 class="card-title">${newsItem.title}</h5>
+                            <p class="card-text">${newsItem.content}</p>
+                            <button class="btn btn-danger delete-news" data-title="${newsItem.title}" data-email="${user.email}">Excluir Notícia</button>
+                        </div>
+                    </div>
+                `).join('');
+
+                userSection.innerHTML = `
+                    <h2 class="text-dark">${user.name} <span class="user-email">(${user.email})</span></h2>
+                    ${newsHtml.length > 0 ? newsHtml : "<p class='text-muted'>Este usuário não tem notícias cadastradas.</p>"}
+                `;
+                
+                usersList.appendChild(userSection);
+            });
+
+            
+            document.querySelectorAll('.delete-news').forEach(button => {
+                button.addEventListener('click', function() {
+                    deleteNews(this.dataset.title, this.dataset.email);
+                    displayUsers(); 
+                });
+            });
+        }
+
+        function deleteNews(title, email) {
+            let news = getNewsFromLocalStorage();
+            news = news.filter(newsItem => !(newsItem.title === title && newsItem.userEmail === email));
+            localStorage.setItem("news", JSON.stringify(news));
+        }
+
+        function getUsersFromLocalStorage() {
+            return localStorage.getItem("users") ? JSON.parse(localStorage.getItem("users")) : [];
+        }
+
+        function getNewsFromLocalStorage() {
+            return localStorage.getItem("news") ? JSON.parse(localStorage.getItem("news")) : [];
+        }
+    </script>
+</body>
+</html>
